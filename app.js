@@ -166,8 +166,19 @@
   }
 
   function appendHighlightedName(node, authors) {
-    const parts = String(authors || '').split(/(Chenglin Liu)/g);
-    parts.forEach((part) => node.append(part === 'Chenglin Liu' ? element('strong', '', part) : document.createTextNode(part)));
+    const parts = String(authors || '').split(/(\*)/g);
+    parts.forEach((part) => {
+      if (part === '*') {
+        const mark = element('sup', 'corresponding-author-mark', '*');
+        mark.setAttribute('aria-label', 'Corresponding author');
+        mark.title = 'Corresponding author';
+        node.append(mark);
+        return;
+      }
+      part.split(/(Chenglin Liu)/g).forEach((namePart) => {
+        node.append(namePart === 'Chenglin Liu' ? element('strong', '', namePart) : document.createTextNode(namePart));
+      });
+    });
   }
 
   function renderCollections() {
